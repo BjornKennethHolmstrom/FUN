@@ -1,40 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# FUN(TIME) - Freedom & Unity Network
 
-## Getting Started
+A digital platform supporting transformative social change through individual meaningful effort.
 
-First, run the development server:
+## Overview
+FUN(TIME) connects people and organizations working towards solving major global and local issues, fostering unity while preserving individual freedom. The platform facilitates knowledge sharing, campaign organization, and collaborative action.
 
+## Core Features
+- **Movement Growth**: Track progress through evolutionary stages (egg → larvae → pupa → butterfly)
+- **Campaign Management**: Organize and participate in meaningful campaigns
+- **Project Collaboration**: Turn ideas into reality through coordinated effort
+- **Resource Sharing**: Access and contribute to a growing knowledge base
+
+## Tech Stack
+- **Frontend**: Next.js 15, React 18, TailwindCSS
+- **Backend**: Node.js with tRPC
+- **Database**: PostgreSQL with Prisma
+- **Cache**: Redis
+- **PWA Support**: Offline-first capabilities
+
+## Development Setup
 ```bash
+# Clone the repository
+git clone [repository-url]
+cd funtime
+
+# Install dependencies
+npm install
+
+# Setup environment variables
+cp .env.example .env
+# Edit .env with your configuration
+
+# Setup database
+npx prisma migrate dev
+npx prisma db seed
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
+```
+src/
+├── components/     # React components
+│   ├── common/    # Shared components
+│   ├── home/      # Home page components
+│   └── layout/    # Layout components
+├── pages/         # Next.js pages
+├── server/        # Backend logic
+├── styles/        # Global styles
+└── types/         # TypeScript definitions
+```
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Design System
+The platform uses an organic, nature-inspired design system reflecting its transformative approach:
+- **Colors**: Earth tones and natural gradients
+- **Animations**: Smooth, organic transitions
+- **Icons**: Custom SVG symbols representing growth and change
+- **Components**: Interactive elements with natural behavior
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Contributing
+Contributions are welcome! Please read our contributing guidelines for details on our code of conduct and development process.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+## License
+[License Type] - see LICENSE file for details

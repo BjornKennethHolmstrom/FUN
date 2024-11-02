@@ -1,0 +1,238 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Stage {
+  EGG
+  LARVAE
+  PUPA
+  BUTTERFLY
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum PostType {
+  UPDATE      // Platform updates
+  STORY       // User stories
+  SOCIAL      // Social media cross-posts
+  PARTNER     // Partner organization updates
+  RESOURCE    // Educational resources
+  EVENT       // Event announcements
+}
+
+enum EventType {
+  ONLINE
+  IN_PERSON
+  HYBRID
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String
+  password      String
+  stage         Stage          @default(EGG)
+  bio           String?        @db.Text
+  location      String?
+  avatarUrl     String?
+  interests     String[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  
+  // Relations
+  posts         Post[]
+  campaigns     Campaign[]     @relation("CampaignCreator")
+  contributions Contribution[]
+  comments      Comment[]
+  events        Event[]        @relation("EventOrganizer")
+  eventRsvps    EventRSVP[]
+  groups        GroupMember[]
+  resources     Resource[]
+  achievements  Achievement[]
+}
+
+model Campaign {
+  id            String         @id @default(cuid())
+  title         String
+  description   String         @db.Text
+  status        CampaignStatus @default(DRAFT)
+  imageUrl      String?
+  startDate     DateTime
+  endDate       DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  
+  // Relations
+  creator       User           @relation("CampaignCreator", fields: [creatorId], references: [id])
+  creatorId     String
+  contributions Contribution[]
+  events        Event[]
+  resources     Resource[]
+  tags          Tag[]
+}
+
+model Contribution {
+  id          String    @id @default(cuid())
+  content     String    @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  campaign    Campaign  @relation(fields: [campaignId], references: [id])
+  campaignId  String
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  comments    Comment[]
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  title       String
+  content     String    @db.Text
+  type        PostType
+  imageUrl    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    String
+  comments    Comment[]
+  tags        Tag[]
+}
+
+model Comment {
+  id              String        @id @default(cuid())
+  content         String        @db.Text
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  // Relations
+  author          User          @relation(fields: [authorId], references: [id])
+  authorId        String
+  post            Post?         @relation(fields: [postId], references: [id])
+  postId          String?
+  contribution    Contribution? @relation(fields: [contributionId], references: [id])
+  contributionId  String?
+}
+
+model Group {
+  id          String        @id @default(cuid())
+  name        String
+  description String        @db.Text
+  imageUrl    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  // Relations
+  members     GroupMember[]
+  events      Event[]
+}
+
+model GroupMember {
+  id        String    @id @default(cuid())
+  role      String    @default("MEMBER") // ADMIN, MODERATOR, MEMBER
+  joinedAt  DateTime  @default(now())
+  
+  // Relations
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  group     Group     @relation(fields: [groupId], references: [id])
+  groupId   String
+
+  @@unique([userId, groupId])
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  description String    @db.Text
+  type        EventType
+  location    String?   // Physical location or online link
+  startTime   DateTime
+  endTime     DateTime
+  maxAttendees Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  organizer   User      @relation("EventOrganizer", fields: [organizerId], references: [id])
+  organizerId String
+  campaign    Campaign? @relation(fields: [campaignId], references: [id])
+  campaignId  String?
+  group       Group?    @relation(fields: [groupId], references: [id])
+  groupId     String?
+  rsvps       EventRSVP[]
+}
+
+model EventRSVP {
+  id        String    @id @default(cuid())
+  status    String    // GOING, MAYBE, NOT_GOING
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  // Relations
+  event     Event     @relation(fields: [eventId], references: [id])
+  eventId   String
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@unique([userId, eventId])
+}
+
+model Resource {
+  id          String    @id @default(cuid())
+  title       String
+  description String    @db.Text
+  type        String    // DOCUMENT, VIDEO, COURSE, etc.
+  url         String?
+  content     String?   @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    String
+  campaign    Campaign? @relation(fields: [campaignId], references: [id])
+  campaignId  String?
+  tags        Tag[]
+}
+
+model Achievement {
+  id          String    @id @default(cuid())
+  title       String
+  description String    @db.Text
+  criteria    String    @db.Text
+  imageUrl    String?
+  createdAt   DateTime  @default(now())
+  unlockedAt  DateTime?
+  
+  // Relations
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model Tag {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?    @db.Text
+  createdAt   DateTime   @default(now())
+  
+  // Relations
+  posts       Post[]
+  campaigns   Campaign[]
+  resources   Resource[]
+}
+
+// Indexes and unique constraints can be added as needed

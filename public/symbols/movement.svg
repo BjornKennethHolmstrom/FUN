@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Movement Symbol: Abstract butterfly/unity representation -->
+  <circle cx="60" cy="60" r="8" opacity="0.9" />
+  <path d="M60,60 Q80,40 95,55 Q80,70 60,60" />
+  <path d="M60,60 Q40,40 25,55 Q40,70 60,60" />
+  <path d="M60,60 Q70,75 85,85" fill="none" stroke="black" stroke-width="2" />
+  <path d="M60,60 Q50,75 35,85" fill="none" stroke="black" stroke-width="2" />
+</svg>

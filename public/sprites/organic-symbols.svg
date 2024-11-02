@@ -1,0 +1,87 @@
+// public/sprites/organic-symbols.svg
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <!-- Movement Symbol: Spiraling butterfly path -->
+  <symbol id="movement-icon" viewBox="0 0 100 100">
+    <path class="wing" d="M50,20 Q65,5 80,20 Q65,40 50,20" />
+    <path class="wing" d="M50,20 Q35,5 20,20 Q35,40 50,20" />
+    <path class="body" d="M50,20 Q50,50 50,80" >
+      <animate 
+        attributeName="d" 
+        dur="3s"
+        repeatCount="indefinite"
+        values="M50,20 Q50,50 50,80;
+                M50,20 Q55,50 50,80;
+                M50,20 Q45,50 50,80;
+                M50,20 Q50,50 50,80" 
+      />
+    </path>
+  </symbol>
+
+  <!-- Campaigns Symbol: Growing branches/connections -->
+  <symbol id="campaigns-icon" viewBox="0 0 100 100">
+    <path class="branch" d="M50,80 Q50,50 50,20">
+      <animate 
+        attributeName="d"
+        dur="4s"
+        repeatCount="indefinite"
+        values="M50,80 Q50,50 50,20;
+                M50,80 Q60,50 50,20;
+                M50,80 Q40,50 50,20;
+                M50,80 Q50,50 50,20"
+      />
+    </path>
+    <path class="leaves" d="M50,50 Q65,45 80,50">
+      <animate 
+        attributeName="d"
+        dur="4s"
+        repeatCount="indefinite"
+        values="M50,50 Q65,45 80,50;
+                M50,50 Q65,40 80,45;
+                M50,50 Q65,45 80,50;"
+      />
+    </path>
+    <path class="leaves" d="M50,50 Q35,45 20,50">
+      <animate 
+        attributeName="d"
+        dur="4s"
+        repeatCount="indefinite"
+        values="M50,50 Q35,45 20,50;
+                M50,50 Q35,40 20,45;
+                M50,50 Q35,45 20,50;"
+      />
+    </path>
+  </symbol>
+
+  <!-- Projects Symbol: Blooming flower/impact -->
+  <symbol id="projects-icon" viewBox="0 0 100 100">
+    <g class="petals">
+      <path d="M50,50 Q60,30 50,10" />
+      <path d="M50,50 Q70,40 90,50" />
+      <path d="M50,50 Q60,70 50,90" />
+      <path d="M50,50 Q30,40 10,50" />
+    </g>
+    <circle class="center" cx="50" cy="50" r="10">
+      <animate 
+        attributeName="r"
+        dur="3s"
+        repeatCount="indefinite"
+        values="8;10;8"
+      />
+    </circle>
+  </symbol>
+
+  <!-- Resources Symbol: Seed/knowledge spreading -->
+  <symbol id="resources-icon" viewBox="0 0 100 100">
+    <path class="seed" d="M45,45 Q50,20 55,45 Q80,50 55,55 Q50,80 45,55 Q20,50 45,45">
+      <animate 
+        attributeName="d"
+        dur="5s"
+        repeatCount="indefinite"
+        values="M45,45 Q50,20 55,45 Q80,50 55,55 Q50,80 45,55 Q20,50 45,45;
+                M43,43 Q50,15 57,43 Q85,50 57,57 Q50,85 43,57 Q15,50 43,43;
+                M45,45 Q50,20 55,45 Q80,50 55,55 Q50,80 45,55 Q20,50 45,45"
+      />
+    </path>
+  </symbol>
+</svg>
