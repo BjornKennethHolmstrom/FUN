@@ -4,26 +4,74 @@
 
 @layer base {
   :root {
-    /* Color System */
-    --color-seed: 27, 67, 50;
-    --color-sprout: 45, 106, 79;
-    --color-bloom: 64, 145, 108;
-    --color-sky: 72, 202, 228;
+    /* Updated Color System - For Vibrancy and Depth */
+    --color-seed: 27, 67, 50;       /* Deep green, foundation */
+    --color-sprout: 45, 106, 79;    /* Rich forest green, early growth */
+    --color-bloom: 64, 145, 108;    /* Fresh green, thriving growth */
+    --color-sky: 72, 202, 228;      /* Sky blue, freedom and openness */
+    --color-butterfly: 234, 128, 252; /* Soft purple-pink for transformation */
+    --color-sunshine: 255, 223, 94; /* Warm golden accent for optimism */
+    
+    /* Typography - Open and Friendly */
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Roboto', sans-serif;
     
     /* Motion */
     --motion-organic: cubic-bezier(0.45, 0.05, 0.55, 0.95);
     --motion-emerge: cubic-bezier(0.19, 1, 0.22, 1);
     --motion-transform: cubic-bezier(0.68, -0.6, 0.32, 1.6);
   }
+
+  /* Base Styles */
+  body {
+    font-family: var(--font-body);
+    background-color: rgb(var(--color-seed));
+    color: rgb(var(--color-sky));
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer components {
+  /* Button Styling - Energetic and Organic */
+  .btn-primary {
+    @apply bg-gradient-to-br from-[#FFDF5E] to-[#F2A65A] text-white py-2 px-4 rounded-lg shadow-md;
+    transition: all 0.3s var(--motion-organic);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Card Component - Soft and Inviting */
+  .card {
+    @apply bg-gradient-to-br from-[#1B4332] to-[#2D6A4F] p-6 rounded-xl shadow-lg text-white;
+    transition: background-color 0.5s var(--motion-organic);
+  }
+
+  /* Headers - Subtle Gradient for Unity */
+  .header-text {
+    background: linear-gradient(90deg, rgba(var(--color-seed), 1) 0%, rgba(var(--color-bloom), 1) 100%);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
 }
 
 @layer utilities {
+  /* Organic Animations and Effects */
   .animate-emerge {
     animation: emerge 0.7s var(--motion-emerge);
   }
 
   .animate-grow {
     transition: all 0.35s var(--motion-organic);
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 
   .gradient-seed {
@@ -32,6 +80,26 @@
 
   .gradient-bloom {
     @apply bg-gradient-to-br from-[#2D6A4F] to-[#40916C];
+  }
+
+  .gradient-sunshine {
+    @apply bg-gradient-to-br from-[#FFDF5E] to-[#F2A65A];
+  }
+
+  /* Ripple Effect */
+  .ripple {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .ripple:after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 223, 94, 0.4);
+    animation: ripple 1s ease-out;
   }
 }
 
@@ -52,3 +120,15 @@
     opacity: 0;
   }
 }
+
+@keyframes bloom {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
