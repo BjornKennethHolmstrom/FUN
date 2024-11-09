@@ -1,31 +1,49 @@
 // src/components/common/OrganicButton.tsx
-interface OrganicButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+import Link from 'next/link';
+
+interface OrganicButtonProps {
   variant?: 'seed' | 'bloom' | 'butterfly';
+  href?: string;
   children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
 }
 
-export function OrganicButton({ variant = 'seed', children, className = '', ...props }: OrganicButtonProps) {
+export function OrganicButton({ 
+  variant = 'seed', 
+  href, 
+  children, 
+  className = '',
+  onClick
+}: OrganicButtonProps) {
+  const buttonClasses = `
+    group relative overflow-hidden rounded-full px-8 py-3
+    transition-all duration-500
+    ${variant === 'seed' ? 'gradient-seed' : 'gradient-bloom'}
+    ${className}
+  `;
+
+  // If href is provided, render as Link
+  if (href) {
+    return (
+      <Link href={href} className={buttonClasses}>
+        <span className="relative z-10 font-medium text-white transition-all duration-500">
+          {children}
+        </span>
+        <div className="absolute inset-0 rounded-full border border-white/20 transition-all duration-700 group-hover:border-white/40" />
+      </Link>
+    );
+  }
+
+  // Otherwise render as button
   return (
     <button
-      className={`
-        group relative overflow-hidden rounded-full px-8 py-3
-        transition-all duration-500
-        ${variant === 'seed' ? 'gradient-seed' : 'gradient-bloom'}
-        ${className}
-      `}
-      {...props}
+      className={buttonClasses}
+      onClick={onClick}
     >
-      {/* Ripple effect container */}
-      <div className="absolute inset-0 overflow-hidden rounded-full">
-        <div className="absolute inset-0 transform transition-transform duration-700 group-hover:scale-105" />
-      </div>
-
-      {/* Content */}
       <span className="relative z-10 font-medium text-white transition-all duration-500">
         {children}
       </span>
-
-      {/* Growing border effect */}
       <div className="absolute inset-0 rounded-full border border-white/20 transition-all duration-700 group-hover:border-white/40" />
     </button>
   );

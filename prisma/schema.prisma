@@ -38,28 +38,33 @@ enum EventType {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  email         String         @unique
-  name          String
-  password      String
-  stage         Stage          @default(EGG)
-  bio           String?        @db.Text
-  location      String?
-  avatarUrl     String?
-  interests     String[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id                 String         @id @default(cuid())
+  email              String         @unique
+  name               String
+  hashedPassword     String
+  bio                String?        @db.Text
+  location           String?
+  avatarUrl          String?
+  interests          String[]
+  motivation         String?        @db.Text
+  startingPath       String?        // personal, community, or global
+  stage              Stage          @default("egg") // egg, larvae, pupa, butterfly
+  preferredLanguage  String         @default("en")
+  subscribeToUpdates Boolean        @default(true)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
   
   // Relations
-  posts         Post[]
-  campaigns     Campaign[]     @relation("CampaignCreator")
-  contributions Contribution[]
-  comments      Comment[]
-  events        Event[]        @relation("EventOrganizer")
-  eventRsvps    EventRSVP[]
-  groups        GroupMember[]
-  resources     Resource[]
-  achievements  Achievement[]
+  ideas              Idea[]
+  posts              Post[]
+  campaigns          Campaign[]     @relation("CampaignCreator")
+  contributions      Contribution[]
+  comments           Comment[]
+  events             Event[]        @relation("EventOrganizer")
+  eventRsvps         EventRSVP[]
+  groups             GroupMember[]
+  resources          Resource[]
+  achievements       Achievement[]
 }
 
 model Campaign {
@@ -233,6 +238,22 @@ model Tag {
   posts       Post[]
   campaigns   Campaign[]
   resources   Resource[]
+  ideas       Idea[]     // Add this relation
+}
+
+model Idea {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  category    String
+  stage       String
+  impact      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  tags        Tag[]
+  contributors User[]
 }
 
 // Indexes and unique constraints can be added as needed

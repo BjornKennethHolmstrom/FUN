@@ -19,6 +19,12 @@ export default function Navigation() {
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link 
+                href="/dashboard" 
+                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-emerald-100 hover:border-emerald-200 hover:text-white"
+              >
+                Dashboard
+              </Link>
+              <Link 
                 href="/explore" 
                 className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-emerald-100 hover:border-emerald-200 hover:text-white"
               >
@@ -71,6 +77,12 @@ export default function Navigation() {
       {isMobileMenuOpen && (
         <div className="sm:hidden">
           <div className="space-y-1 pb-3 pt-2">
+            <Link
+              href="/dashboard"
+              className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-blue-300 hover:bg-gray-50 hover:text-gray-700"
+            >
+              Dashboard
+            </Link>
             <Link
               href="/explore"
               className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-blue-300 hover:bg-gray-50 hover:text-gray-700"

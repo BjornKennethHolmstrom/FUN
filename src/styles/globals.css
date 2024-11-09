@@ -132,3 +132,48 @@
   }
 }
 
+@keyframes eggPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes flowLines {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(-2px); opacity: 0.8; }
+}
+
+@keyframes undulate {
+  0%, 100% { d: path('M4 12 Q8 8 12 12 Q16 16 20 12'); }
+  50% { d: path('M4 12 Q8 16 12 12 Q16 8 20 12'); }
+}
+
+@keyframes moveSegment {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes antennaWave {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(15deg); }
+}
+
+@keyframes threadSway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(5deg); }
+}
+
+@keyframes chrysalisPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes transformLines {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes wingFlap {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(0.8); }
+}
+

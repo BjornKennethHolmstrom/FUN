@@ -46,10 +46,10 @@ export default function WelcomeBanner() {
           {currentQuote}
         </p>
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center sm:gap-6">
-          <OrganicButton variant="butterfly">
+          <OrganicButton variant="butterfly" href="/join">
             Join the Movement
           </OrganicButton>
-          <OrganicButton variant="seed">
+          <OrganicButton variant="seed" href="/learn-more">
             Learn More
           </OrganicButton>
         </div>

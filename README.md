@@ -5,8 +5,16 @@ A digital platform supporting transformative social change through individual me
 ## Overview
 FUN(TIME) connects people and organizations working towards solving major global and local issues, fostering unity while preserving individual freedom. The platform facilitates knowledge sharing, campaign organization, and collaborative action.
 
+## Recent Updates
+- **Enhanced Authentication**: Multi-step signup process with path selection
+- **Stage Tracking**: Visual progression through transformation stages
+- **Improved Navigation**: Seamless integration between pages
+- **Mission Pages**: Comprehensive Learn More and Join pages
+
 ## Core Features
 - **Movement Growth**: Track progress through evolutionary stages (egg → larvae → pupa → butterfly)
+- **User Journeys**: Multiple paths for different types of engagement
+- **Authentication**: Secure, multi-step registration process
 - **Campaign Management**: Organize and participate in meaningful campaigns
 - **Project Collaboration**: Turn ideas into reality through coordinated effort
 - **Resource Sharing**: Access and contribute to a growing knowledge base
@@ -17,6 +25,13 @@ FUN(TIME) connects people and organizations working towards solving major global
 - **Database**: PostgreSQL with Prisma
 - **Cache**: Redis
 - **PWA Support**: Offline-first capabilities
+
+## Environment Setup
+```bash
+# Required environment variables
+DATABASE_URL="postgresql://user:password@localhost:5432/funtime"
+JWT_SECRET="your-secure-jwt-secret"
+```
 
 ## Development Setup
 ```bash
@@ -43,13 +58,45 @@ npm run dev
 ```
 src/
 ├── components/     # React components
+│   ├── auth
 │   ├── common/    # Shared components
+│   │   ├── Button.tsx
+│   │   ├── Card.tsx
+│   │   ├── LoadingSpinner.tsx
+│   │   ├── Navigation.tsx
+│   │   ├── OrganicButton.tsx
+│   │   ├── OrganicCard.tsx
+│   │   ├── OrganicSymbols.tsx
+│   │   └── SvgSprite.tsx
 │   ├── home/      # Home page components
+│   │   ├── HighlightsFeed.tsx
+│   │   ├── QuickActions.tsx
+│   │   └── WelcomeBanner.tsx
 │   └── layout/    # Layout components
+│       └── MainLayout.tsx
+├── docs
+├── lib
+│   └── trpc.ts
 ├── pages/         # Next.js pages
+│   ├── api
+│   │   └── trpc
+│   │       └── [trpc].ts
+│   ├── _app.tsx
+│   ├── index.tsx
+│   └── test-db.tsx
 ├── server/        # Backend logic
+│   ├── context.ts
+│   ├── db.ts
+│   ├── routers
+│   │   ├── index.ts
+│   │   ├── post.ts
+│   │   └── user.ts
+│   └── trpc.ts
 ├── styles/        # Global styles
-└── types/         # TypeScript definitions
+│   └── globals.css
+├── types/         # TypeScript definitions
+│   └── index.ts
+└── utils
 ```
 
 ## Design System
