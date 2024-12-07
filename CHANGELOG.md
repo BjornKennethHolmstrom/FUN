@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2024-12-07
+### Changed
+- Reimagined platform focus to support both existing and new projects
+- Transformed Explore Ideas into Projects Hub with dual functionality
+- Updated navigation to reflect new platform direction
+
+### Added
+- Projects Hub with toggle between existing and new projects
+- Verification system for established projects
+- Enhanced project cards with stage indicators
+- New filtering system for project types
+
 ## [0.2.0] - 2024-11-09
 ### Added
 - User registration system with multi-step signup form

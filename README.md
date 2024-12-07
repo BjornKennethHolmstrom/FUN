@@ -1,15 +1,15 @@
 # FUN(TIME) - Freedom & Unity Network
 
-A digital platform supporting transformative social change through individual meaningful effort.
+A digital platform connecting and nurturing transformative projects for positive social change.
 
 ## Overview
-FUN(TIME) connects people and organizations working towards solving major global and local issues, fostering unity while preserving individual freedom. The platform facilitates knowledge sharing, campaign organization, and collaborative action.
+FUN(TIME) serves as both a directory for established initiatives and an incubator for new projects, fostering unity while preserving individual freedom. The platform connects change-makers with existing projects while providing resources and support for emerging initiatives.
 
 ## Recent Updates
-- **Enhanced Authentication**: Multi-step signup process with path selection
-- **Stage Tracking**: Visual progression through transformation stages
-- **Improved Navigation**: Seamless integration between pages
-- **Mission Pages**: Comprehensive Learn More and Join pages
+- **Projects Hub**: New dual-purpose hub for discovering existing projects and launching new ones
+- **Project Verification**: System for verified existing project listings
+- **Enhanced Navigation**: Seamless integration of project discovery features
+- **Stage Tracking**: Visual progression through project development stages
 
 ## Core Features
 - **Movement Growth**: Track progress through evolutionary stages (egg → larvae → pupa → butterfly)
