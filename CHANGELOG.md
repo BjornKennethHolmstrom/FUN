@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2024-12-29
+### Added
+- Comprehensive test suite for authentication system
+- Redis-based token service for session management
+- Password hashing and verification utilities
+- Type-safe authentication endpoints:
+  - Login with email/password
+  - Token refresh
+  - Session management
+  - Single and multi-device logout
+
+### Enhanced
+- Improved security with hybrid JWT/Redis authentication
+- Added proper database cleanup for tests
+- Type-safe user authentication interfaces
+- Prisma schema mapping for authentication fields
+
+### Technical Details
+- Implemented bcryptjs for password handling
+- Created separate test database configuration
+- Added systematic database cleanup in test environment
+- Enhanced error handling in auth endpoints
+
 ## [0.3.0] - 2024-12-07
 ### Changed
 - Reimagined platform focus to support both existing and new projects

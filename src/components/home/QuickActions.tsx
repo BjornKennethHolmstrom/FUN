@@ -17,6 +17,7 @@ const actions = [
     description: 'Unite for meaningful change.',
     stage: 'larvae' as const,
     progress: 45,
+    href: 'action-hub'
   },
   {
     type: 'projects' as const,
@@ -24,6 +25,7 @@ const actions = [
     description: 'From ideas to reality.',
     stage: 'pupa' as const,
     progress: 60,
+    href: '/projects'
   },
   {
     type: 'resources' as const,
@@ -31,6 +33,7 @@ const actions = [
     description: 'Grow and learn together.',
     stage: 'egg' as const,
     progress: 30,
+    href: '/learn'
   },
 ];
 

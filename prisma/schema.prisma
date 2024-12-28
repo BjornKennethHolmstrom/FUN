@@ -41,14 +41,14 @@ model User {
   id                 String         @id @default(cuid())
   email              String         @unique
   name               String
-  hashedPassword     String
+  password           String         @map("password")
   bio                String?        @db.Text
   location           String?
   avatarUrl          String?
   interests          String[]
   motivation         String?        @db.Text
   startingPath       String?        // personal, community, or global
-  stage              Stage          @default("egg") // egg, larvae, pupa, butterfly
+  stage              Stage          @default(EGG) // egg, larvae, pupa, butterfly
   preferredLanguage  String         @default("en")
   subscribeToUpdates Boolean        @default(true)
   createdAt          DateTime       @default(now())
@@ -255,5 +255,3 @@ model Idea {
   tags        Tag[]
   contributors User[]
 }
-
-// Indexes and unique constraints can be added as needed
