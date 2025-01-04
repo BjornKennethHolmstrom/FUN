@@ -3,7 +3,7 @@
 ## 1. Authentication & User Management
 - [x] Backend: Complete user authentication endpoints (signup, login, logout)
 - [x] Backend: Add tests and make all pass
-- [ ] Frontend: Polish signup/login forms with validation
+- [x] Frontend: Polish signup/login forms with validation
 - [ ] Backend: Password reset and email verification endpoints
 - [ ] Frontend: Password reset and email verification interface
 - [ ] Backend: User profile management endpoints

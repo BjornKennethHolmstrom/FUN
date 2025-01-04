@@ -11,75 +11,42 @@ import {
   Heart,
   ChevronRight,
   ChevronLeft,
-  CheckCircle
+  CheckCircle,
+  AlertCircle
 } from 'lucide-react';
+import { useFormValidation } from '@/lib/validation';
 import Card from '../common/Card';
-
-type FormStep = 'basics' | 'interests' | 'journey' | 'confirm';
-
-interface FormData {
-  email: string;
-  password: string;
-  name: string;
-  location: string;
-  interests: string[];
-  motivation: string;
-  startingPath: 'personal' | 'community' | 'global';
-  preferredLanguage: string;
-  agreeToTerms: boolean;
-  subscribeToUpdates: boolean;
-}
+import { 
+  SignupFormData, 
+  FormStep, 
+  SIGNUP_PATHS, 
+  INTEREST_CATEGORIES 
+} from '@/types/auth';
 
 const SignupForm = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState<FormStep>('basics');
-  const [formData, setFormData] = useState<FormData>({
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+
+  const [formData, setFormData] = useState<SignupFormData>({
     email: '',
     password: '',
     name: '',
     location: '',
     interests: [],
     motivation: '',
-    startingPath: '',
+    startingPath: 'personal',
     preferredLanguage: 'en',
     agreeToTerms: false,
     subscribeToUpdates: true
   });
 
-  const interests = [
-    'Environmental Sustainability',
-    'Social Justice',
-    'Education',
-    'Healthcare',
-    'Technology',
-    'Community Building',
-    'Economic Justice',
-    'Arts & Culture',
-    'Democracy & Governance',
-    'Peace & Conflict Resolution'
-  ];
+  const { validate, getFieldError } = useFormValidation(currentStep, formData);
 
-  const paths = [
-    {
-      id: 'personal',
-      title: 'Personal Growth',
-      description: 'Focus on individual transformation and local impact'
-    },
-    {
-      id: 'community',
-      title: 'Community Builder',
-      description: 'Connect and strengthen local networks'
-    },
-    {
-      id: 'global',
-      title: 'Global Catalyst',
-      description: 'Work on international initiatives and connections'
-    }
-  ];
-
-  const updateFormData = (field: keyof FormData, value: any) => {
+  const updateFormData = (field: keyof SignupFormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    setTouchedFields(prev => new Set(prev).add(field));
   };
 
   const handleInterestToggle = (interest: string) => {
@@ -87,6 +54,89 @@ const SignupForm = () => {
       ? formData.interests.filter(i => i !== interest)
       : [...formData.interests, interest];
     updateFormData('interests', newInterests);
+  };
+
+  const handleBlur = (field: string) => {
+    setTouchedFields(prev => new Set(prev).add(field));
+  };
+
+  const showError = (field: string) => {
+    return touchedFields.has(field) ? getFieldError(field) : null;
+  };
+
+  const validateStep = () => {
+    const result = validate();
+    // Mark all fields in current step as touched when attempting to proceed
+    const stepFields = Object.keys(formData).filter(field => 
+      currentStep === 'basics' ? ['email', 'password', 'name'].includes(field) :
+      currentStep === 'interests' ? ['interests'].includes(field) :
+      currentStep === 'journey' ? ['startingPath', 'motivation'].includes(field) :
+      currentStep === 'confirm' ? ['agreeToTerms'].includes(field) : false
+    );
+    setTouchedFields(prev => new Set([...prev, ...stepFields]));
+    return result.isValid;
+  };
+
+  const handleContinue = () => {
+    if (validateStep()) {
+      const stepOrder: FormStep[] = ['basics', 'interests', 'journey', 'confirm'];
+      const currentIndex = stepOrder.indexOf(currentStep);
+      if (currentIndex < stepOrder.length - 1) {
+        setCurrentStep(stepOrder[currentIndex + 1]);
+      } else {
+        handleSubmit();
+      }
+    }
+  };
+
+  const handleBack = () => {
+    const stepOrder: FormStep[] = ['basics', 'interests', 'journey', 'confirm'];
+    const currentIndex = stepOrder.indexOf(currentStep);
+    if (currentIndex > 0) {
+      setCurrentStep(stepOrder[currentIndex - 1]);
+    }
+  };
+
+  // Get the mutation
+  const signup = trpc.user.signup.useMutation({
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.token);
+      router.push('/dashboard');
+    },
+    onError: (error) => {
+      setError(error.message);
+    },
+  });
+
+  const handleSubmit = async () => {
+    if (validateStep()) {
+      try {
+        await signup.mutate({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          location: formData.location,
+          interests: formData.interests,
+          motivation: formData.motivation,
+          startingPath: formData.startingPath,
+          preferredLanguage: formData.preferredLanguage,
+          subscribeToUpdates: formData.subscribeToUpdates,
+        });
+      } catch (error) {
+        // The error will be handled by the mutation's onError
+      }
+    }
+  };
+
+  const renderFieldError = (field: string) => {
+    const error = showError(field);
+    if (!error) return null;
+    return (
+      <p className="mt-1 flex items-center text-sm text-red-600">
+        <AlertCircle className="mr-1 h-4 w-4" />
+        {error}
+      </p>
+    );
   };
 
   const isStepValid = () => {
@@ -103,41 +153,6 @@ const SignupForm = () => {
         return false;
     }
   };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (currentStep === 'confirm' && formData.agreeToTerms) {
-      try {
-        await signup.mutate({
-          email: formData.email,
-          password: formData.password,
-          name: formData.name,
-          location: formData.location,
-          interests: formData.interests,
-          motivation: formData.motivation,
-          startingPath: formData.startingPath,
-          preferredLanguage: formData.preferredLanguage,
-          subscribeToUpdates: formData.subscribeToUpdates,
-        });
-      } catch (error) {
-        setError('Something went wrong. Please try again.');
-      }
-    }
-  };
-
-  // Get the mutation
-  const signup = trpc.user.signup.useMutation({
-    onSuccess: (data) => {
-      // Store the token in localStorage or a secure cookie
-      localStorage.setItem('token', data.token);
-      
-      // Redirect to dashboard or onboarding
-      router.push('/dashboard');
-    },
-    onError: (error) => {
-      setError(error.message);
-    },
-  });
 
   // Add error display to the form
   const renderError = () => {
@@ -165,13 +180,19 @@ const SignupForm = () => {
               <div className="relative">
                 <input
                   type="email"
-                  className="w-full rounded-lg border-gray-300 pl-10 focus:border-emerald-500 focus:ring-emerald-500"
+                  className={`w-full rounded-lg border pl-10 pr-4 focus:ring-emerald-500
+                    ${showError('email') 
+                      ? 'border-red-300 focus:border-red-500' 
+                      : 'border-gray-300 focus:border-emerald-500'}`}
                   value={formData.email}
                   onChange={(e) => updateFormData('email', e.target.value)}
+                  onBlur={() => handleBlur('email')}
                   placeholder="your@email.com"
                 />
-                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                <Mail className={`absolute left-3 top-2.5 h-5 w-5
+                  ${showError('email') ? 'text-red-400' : 'text-gray-400'}`} />
               </div>
+              {renderFieldError('email')}
             </div>
 
             <div>
@@ -181,13 +202,19 @@ const SignupForm = () => {
               <div className="relative">
                 <input
                   type="password"
-                  className="w-full rounded-lg border-gray-300 pl-10 focus:border-emerald-500 focus:ring-emerald-500"
+                  className={`w-full rounded-lg border pl-10 pr-4 focus:ring-emerald-500
+                    ${showError('password') 
+                      ? 'border-red-300 focus:border-red-500' 
+                      : 'border-gray-300 focus:border-emerald-500'}`}
                   value={formData.password}
                   onChange={(e) => updateFormData('password', e.target.value)}
+                  onBlur={() => handleBlur('password')}
                   placeholder="••••••••"
                 />
-                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                <Lock className={`absolute left-3 top-2.5 h-5 w-5
+                  ${showError('password') ? 'text-red-400' : 'text-gray-400'}`} />
               </div>
+              {renderFieldError('password')}
             </div>
 
             <div>
@@ -197,23 +224,29 @@ const SignupForm = () => {
               <div className="relative">
                 <input
                   type="text"
-                  className="w-full rounded-lg border-gray-300 pl-10 focus:border-emerald-500 focus:ring-emerald-500"
+                  className={`w-full rounded-lg border pl-10 pr-4 focus:ring-emerald-500
+                    ${showError('name') 
+                      ? 'border-red-300 focus:border-red-500' 
+                      : 'border-gray-300 focus:border-emerald-500'}`}
                   value={formData.name}
                   onChange={(e) => updateFormData('name', e.target.value)}
+                  onBlur={() => handleBlur('name')}
                   placeholder="Your name"
                 />
-                <User className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                <User className={`absolute left-3 top-2.5 h-5 w-5
+                  ${showError('name') ? 'text-red-400' : 'text-gray-400'}`} />
               </div>
+              {renderFieldError('name')}
             </div>
 
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
-                Location
+                Location <span className="text-gray-400">(Optional)</span>
               </label>
               <div className="relative">
                 <input
                   type="text"
-                  className="w-full rounded-lg border-gray-300 pl-10 focus:border-emerald-500 focus:ring-emerald-500"
+                  className="w-full rounded-lg border-gray-300 pl-10 pr-4 focus:border-emerald-500 focus:ring-emerald-500"
                   value={formData.location}
                   onChange={(e) => updateFormData('location', e.target.value)}
                   placeholder="City, Country"
@@ -231,7 +264,7 @@ const SignupForm = () => {
               Select the areas you're most passionate about (select at least one):
             </p>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {interests.map((interest) => (
+              {INTEREST_CATEGORIES.map((interest) => (
                 <button
                   key={interest}
                   type="button"
@@ -246,6 +279,7 @@ const SignupForm = () => {
                 </button>
               ))}
             </div>
+            {renderFieldError('interests')}
           </div>
         );
 
@@ -257,7 +291,7 @@ const SignupForm = () => {
                 Choose your starting path:
               </label>
               <div className="space-y-3">
-                {paths.map((path) => (
+                {SIGNUP_PATHS.map((path) => (
                   <div
                     key={path.id}
                     onClick={() => updateFormData('startingPath', path.id)}
@@ -272,6 +306,7 @@ const SignupForm = () => {
                   </div>
                 ))}
               </div>
+              {renderFieldError('startingPath')}
             </div>
 
             <div>
@@ -279,12 +314,17 @@ const SignupForm = () => {
                 What motivates you to join FUN?
               </label>
               <textarea
-                className="w-full rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                className={`w-full rounded-lg border focus:ring-emerald-500
+                  ${showError('motivation') 
+                    ? 'border-red-300 focus:border-red-500' 
+                    : 'border-gray-300 focus:border-emerald-500'}`}
                 rows={4}
                 value={formData.motivation}
                 onChange={(e) => updateFormData('motivation', e.target.value)}
+                onBlur={() => handleBlur('motivation')}
                 placeholder="Share your story and what brings you here..."
               />
+              {renderFieldError('motivation')}
             </div>
           </div>
         );
@@ -303,11 +343,13 @@ const SignupForm = () => {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4" />
-                  Starting as a {paths.find(p => p.id === formData.startingPath)?.title}
+                  Starting as a {formData.startingPath === 'personal' ? 'Personal Growth Journey' 
+                    : formData.startingPath === 'community' ? 'Community Builder' 
+                    : 'Global Catalyst'}
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4" />
-                  Connected from {formData.location}
+                  Connected from {formData.location || 'Worldwide'}
                 </li>
               </ul>
             </div>
@@ -316,7 +358,10 @@ const SignupForm = () => {
               <label className="flex items-start gap-2">
                 <input
                   type="checkbox"
-                  className="mt-1 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                  className={`mt-1 rounded border focus:ring-emerald-500
+                    ${showError('agreeToTerms') 
+                      ? 'border-red-300 text-red-500' 
+                      : 'border-gray-300 text-emerald-600'}`}
                   checked={formData.agreeToTerms}
                   onChange={(e) => updateFormData('agreeToTerms', e.target.checked)}
                 />
@@ -324,6 +369,7 @@ const SignupForm = () => {
                   I agree to FUN's Terms of Service and Privacy Policy, and commit to contributing positively to the community
                 </span>
               </label>
+              {renderFieldError('agreeToTerms')}
 
               <label className="flex items-start gap-2">
                 <input
@@ -349,7 +395,12 @@ const SignupForm = () => {
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white py-12">
       <div className="mx-auto max-w-2xl px-4">
         <Card className="overflow-hidden">
-          {renderError()}
+          {error && (
+            <div className="mb-4 rounded-lg bg-red-50 p-4 text-red-700">
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
+          
           <div className="px-6 pt-8">
             <div className="mb-8 text-center">
               <h1 className="text-2xl font-bold text-gray-900">Join FUN(TIME)</h1>
@@ -392,7 +443,7 @@ const SignupForm = () => {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={(e) => e.preventDefault()}>
               {renderStep()}
             </form>
           </div>
@@ -402,7 +453,7 @@ const SignupForm = () => {
             {currentStepIndex > 0 ? (
               <button
                 type="button"
-                onClick={() => setCurrentStep(steps[currentStepIndex - 1])}
+                onClick={handleBack}
                 className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -413,15 +464,15 @@ const SignupForm = () => {
             )}
             <button
               type="button"
-              onClick={handleSubmit}
-              disabled={!isStepValid() || isLoading}
+              onClick={handleContinue}
+              disabled={signup.isLoading}
               className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium
-                ${isStepValid() && !isLoading
+                ${validateStep() && !signup.isLoading
                   ? 'bg-emerald-500 text-white hover:bg-emerald-600'
                   : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                 }`}
             >
-              {isLoading ? (
+              {signup.isLoading ? (
                 <>
                   <span className="animate-spin">⋮</span>
                   Signing up...

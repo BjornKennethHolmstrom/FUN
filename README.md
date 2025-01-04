@@ -14,7 +14,10 @@ FUN(TIME) serves as both a directory for established initiatives and an incubato
 ## Core Features
 - **Movement Growth**: Track progress through evolutionary stages (egg → larvae → pupa → butterfly)
 - **User Journeys**: Multiple paths for different types of engagement
-- **Authentication**: Secure, multi-step registration process
+- **Authentication**: 
+  - Secure, multi-step registration process
+  - Type-safe login system
+  - Shared authentication types
 - **Campaign Management**: Organize and participate in meaningful campaigns
 - **Project Collaboration**: Turn ideas into reality through coordinated effort
 - **Resource Sharing**: Access and contribute to a growing knowledge base
